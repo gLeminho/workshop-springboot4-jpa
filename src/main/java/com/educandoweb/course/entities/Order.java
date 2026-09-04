@@ -38,11 +38,12 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
-    @JsonIgnore
+    
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
-    @OneToOne(mappedBy = "order",cascade = CascadeType.ALL) // na classe dependente utilizamos o @MapsId, utilizamos o CascadeType para as duas entidades terem o mesmo ID
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL) // na classe dependente utilizamos o @MapsId, utilizamos o
+                                                             // CascadeType para as duas entidades terem o mesmo ID
     private Payment payment;
 
     public Order() {
@@ -100,6 +101,16 @@ public class Order implements Serializable {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public Double getTotal() {
+        Double total = 0.0;
+
+        for (OrderItem i : items) {
+            total += i.getSubtotal();
+        }
+
+        return total;
     }
 
     @Override
